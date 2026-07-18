@@ -21,10 +21,31 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
-    }
+        var seenWords = new HashSet<string>();
+        var pairs = new List<string>();
 
+        foreach (var word in words)
+        {
+            // Reverse the two-letter word
+            string reversedWord = new string(new char[] { word[1], word[0] });
+
+            // Special case: ignore words with identical letters like "aa"
+            if (word == reversedWord)
+            {
+                continue;
+            }
+
+            // If we have already encountered the reversed version, we found a pair
+            if (seenWords.Contains(reversedWord))
+            {
+                pairs.Add($"{reversedWord} & {word}");
+            }
+
+            seenWords.Add(word);
+        }
+
+        return pairs.ToArray();
+    }
     /// <summary>
     /// Read a census file and summarize the degrees (education)
     /// earned by those contained in the file.  The summary
@@ -39,10 +60,25 @@ public static class SetsAndMaps
     public static Dictionary<string, int> SummarizeDegrees(string filename)
     {
         var degrees = new Dictionary<string, int>();
+        
         foreach (var line in File.ReadLines(filename))
         {
             var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
+            
+            if (fields.Length > 3)
+            {
+                // The degree is in the 4th column (index 3)
+                string degreeName = fields[3].Trim();
+
+                if (degrees.ContainsKey(degreeName))
+                {
+                    degrees[degreeName] += 1;
+                }
+                else
+                {
+                    degrees[degreeName] = 1;
+                }
+            }
         }
 
         return degrees;
@@ -64,10 +100,45 @@ public static class SetsAndMaps
     /// Reminder: You can access a letter by index in a string by 
     /// using the [] notation.
     /// </summary>
-    public static bool IsAnagram(string word1, string word2)
+ public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        var letterCounts = new Dictionary<char, int>();
+
+        // Count letters in the first word
+        foreach (char c in word1.ToLower())
+        {
+            if (c == ' ') continue; // Ignore spaces
+
+            if (letterCounts.ContainsKey(c))
+            {
+                letterCounts[c] += 1;
+            }
+            else
+            {
+                letterCounts[c] = 1;
+            }
+        }
+
+        // Subtract letters using the second word
+        foreach (char c in word2.ToLower())
+        {
+            if (c == ' ') continue; // Ignore spaces
+
+            if (!letterCounts.ContainsKey(c))
+            {
+                return false; // Found a letter not present in the first word
+            }
+
+            letterCounts[c] -= 1;
+
+            if (letterCounts[c] == 0)
+            {
+                letterCounts.Remove(c);
+            }
+        }
+
+        // If the dictionary is empty, all letters matched perfectly
+        return letterCounts.Count == 0;
     }
 
     /// <summary>
@@ -84,7 +155,7 @@ public static class SetsAndMaps
     /// https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
     /// 
     /// </summary>
-    public static string[] EarthquakeDailySummary()
+   public static string[] EarthquakeDailySummary()
     {
         const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
         using var client = new HttpClient();
@@ -96,11 +167,21 @@ public static class SetsAndMaps
 
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
 
-        // TODO Problem 5:
-        // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
-        // on those classes so that the call to Deserialize above works properly.
-        // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
-        // 3. Return an array of these string descriptions.
-        return [];
+        var summaryList = new List<string>();
+
+        if (featureCollection?.Features != null)
+        {
+            foreach (var feature in featureCollection.Features)
+            {
+                if (feature.Properties != null)
+                {
+                    string place = feature.Properties.Place;
+                    double? magnitude = feature.Properties.Mag;
+                    summaryList.Add($"{place} - Mag {magnitude}");
+                }
+            }
+        }
+
+        return summaryList.ToArray();
     }
 }

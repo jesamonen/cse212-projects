@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 /// <summary>
 /// Defines a maze using a dictionary. The dictionary is provided by the
 /// user when the Maze object is created. The dictionary will contain the
@@ -25,14 +28,24 @@ public class Maze
         _mazeMap = mazeMap;
     }
 
-    // TODO Problem 4 - ADD YOUR CODE HERE
     /// <summary>
     /// Check to see if you can move left.  If you can, then move.  If you
     /// can't move, throw an InvalidOperationException with the message "Can't go that way!".
     /// </summary>
     public void MoveLeft()
     {
-        // FILL IN CODE
+        var currentPosition = (_currX, _currY);
+        bool[] directions = _mazeMap[currentPosition];
+
+        // Index 0 represents 'left'
+        if (directions[0] == true)
+        {
+            _currX -= 1;
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -41,7 +54,18 @@ public class Maze
     /// </summary>
     public void MoveRight()
     {
-        // FILL IN CODE
+        var currentPosition = (_currX, _currY);
+        bool[] directions = _mazeMap[currentPosition];
+
+        // Index 1 represents 'right'
+        if (directions[1] == true)
+        {
+            _currX += 1;
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -50,7 +74,18 @@ public class Maze
     /// </summary>
     public void MoveUp()
     {
-        // FILL IN CODE
+        var currentPosition = (_currX, _currY);
+        bool[] directions = _mazeMap[currentPosition];
+
+        // Index 2 represents 'up'
+        if (directions[2] == true)
+        {
+            _currY -= 1;
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -59,7 +94,18 @@ public class Maze
     /// </summary>
     public void MoveDown()
     {
-        // FILL IN CODE
+        var currentPosition = (_currX, _currY);
+        bool[] directions = _mazeMap[currentPosition];
+
+        // Index 3 represents 'down'
+        if (directions[3] == true)
+        {
+            _currY += 1;
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     public string GetStatus()
