@@ -13,13 +13,12 @@ public class BinarySearchTree : IEnumerable<int>
     {
         // Create new node
         Node newNode = new(value);
-        
-        // If the tree is empty, set root to the new node.
+        // If the list is empty, then point both head and tail to the new node.
         if (_root is null)
         {
             _root = newNode;
         }
-        // If the tree is not empty, delegate insertion to the root node.
+        // If the list is not empty, then only head will be affected.
         else
         {
             _root.Insert(value);
