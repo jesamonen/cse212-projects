@@ -1,3 +1,5 @@
+using System;
+
 public class Node
 {
     public int Data { get; set; }
@@ -11,8 +13,6 @@ public class Node
 
     public void Insert(int value)
     {
-        // TODO Start Problem 1
-
         if (value < Data)
         {
             // Insert to the left
@@ -29,12 +29,11 @@ public class Node
             else
                 Right.Insert(value);
         }
-        // Duplicates are ignored by standard BST rules
+        // Duplicate values (value == Data) are ignored.
     }
 
     public bool Contains(int value)
     {
-        // TODO Start Problem 2
         if (value == Data)
         {
             return true;
@@ -51,7 +50,6 @@ public class Node
 
     public int GetHeight()
     {
-        // TODO Start Problem 4
         int leftHeight = Left?.GetHeight() ?? 0;
         int rightHeight = Right?.GetHeight() ?? 0;
 
